@@ -1,5 +1,5 @@
 /*
- * angular-elastic v2.3.2
+ * angular-elastic v2.3.3
  * (c) 2013 Monospaced http://monospaced.com
  * License: MIT
  */
@@ -38,6 +38,10 @@ angular.module('monospaced.elastic', [])
         var text = ta.value;
         ta.value = '';
         ta.value = text;
+          
+        // set font-size and line-height
+        var fs = getComputedStyle(ta).getPropertyValue('font-size').replace('px', ''),
+            lh = ta.offsetHeight;
 
         var appendText = attrs.msdElastic || config.append,
             append = appendText === '\\n' ? '\n' : appendText,
@@ -68,7 +72,10 @@ angular.module('monospaced.elastic', [])
             minHeightValue = parseInt(taStyle.getPropertyValue('min-height'), 10),
             heightValue = parseInt(taStyle.getPropertyValue('height'), 10),
             minHeight = Math.max(minHeightValue, heightValue) - boxOuter.height,
-            maxHeight = parseInt(taStyle.getPropertyValue('max-height'), 10),
+            maxHeight = attrs.maxRows ?
+                        Math.ceil((fs * Math.round(attrs.maxRows / 2) *
+                            Math.round((lh / fs) * 100) / 100) + ((fs * 200) / 300)) :
+                        parseInt(taStyle.getPropertyValue('max-height'), 10),
             mirrored,
             active,
             copyStyle = ['font-family',
